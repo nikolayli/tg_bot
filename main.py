@@ -4,11 +4,17 @@ from aiogram import Bot, Dispatcher
 from handlers import bot_messages, user_commands, questionaire
 from callbacks import pagination
 
+#from middlewares.check_sub import CheckSubscription
+from middlewares.antiflood import AntiFloodMiddleware
+
 from config_reader import config
 
 async def main():
   bot = Bot(config.bot_token.get_secret_value(), parse_mode="HTML")
   dp = Dispatcher()
+
+  #dp.message.middleware(CheckSubscription())
+  dp.message.middleware(AntiFloodMiddleware())
 
   dp.include_routers(
     questionaire.router,
